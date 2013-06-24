@@ -1,0 +1,8 @@
+<h3>Recent Posts</h3>
+<a href='/'>back</a>
+<br><br>
+<% @posts.each do |post| %>
+	* <a href='/post/<%= post.id %>'><%= post.title %></a>
+	<%= post.created_at %>
+	<br>
+<% end %>

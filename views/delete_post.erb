@@ -1,0 +1,10 @@
+<h3>Delete Posts</h3>
+<a href='/'>back</a>
+<br><br>
+<% @posts.each do |post| %>
+	<form method='post' action='/delete/<%= post.id %>'>
+		* <a href='/post/<%= post.id %>'><%= post.title %></a>
+		<%= post.created_at %>&nbsp<input type='submit' value='delete' />
+		<br>
+	</form>
+<% end %>
