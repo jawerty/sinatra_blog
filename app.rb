@@ -1,28 +1,47 @@
 require 'sinatra'
 require 'data_mapper'
 
+def checkLogin (name, pass)
+	if name == 'Jared' and pass == 'jaywrit' 
+		return true
+	else 
+		return false
+	end
+end
+
+enable :sessions
+
 error do
-  erb :'500'
+	erb :'500'
 end
 
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/blog_new.db")  
 
 class Post
-  include DataMapper::Resource
-  property :id, Serial
-  property :title, Text, :required => true
-  property :content, Text, :required => true
-  property :created_at, DateTime
+	include DataMapper::Resource
+	property :id, Serial
+	property :title, Text, :required => true
+	property :content, Text, :required => true
+	property :created_at, DateTime
 end
 
 DataMapper.finalize.auto_upgrade!
 
 get '/' do
+	if session[:user] == true
+		@admin = true
+	else 
+		@admin = false
+	end
 	erb :main
 end
 
 get '/new' do
-	erb :new_post
+	if session[:user] == true
+		erb :new_post
+	else
+		redirect '/auth'
+	end
 end
 
 post '/new' do
@@ -35,8 +54,12 @@ post '/new' do
 end
 
 get '/delete' do
-	@posts = Post.all :order => :id.desc
-	erb :delete_post
+	if session[:user] == true
+		@posts = Post.all :order => :id.desc
+		erb :delete_post
+	else
+		redirect '/auth'
+	end
 end
 
 post '/delete/:id' do
@@ -53,4 +76,22 @@ end
 get '/posts' do
 	@posts = Post.all :order => :id.desc
 	erb :posts
+end
+
+get '/auth' do
+	erb :authorize
+end
+
+post '/auth' do
+	if checkLogin(params[:name], params[:password])
+		session[:user] = true
+		redirect '/new'
+	else 
+		redirect '/auth'
+	end
+end
+
+get '/logout' do
+	session.clear
+	redirect '/'
 end
