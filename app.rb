@@ -2,7 +2,7 @@ require 'sinatra'
 require 'data_mapper'
 
 def checkLogin (name, pass)
-	if name == 'Jared' and pass == 'jaywrit' 
+	if name == 'Jared' and pass == 'jaywrit' then
 		return true
 	else 
 		return false
@@ -28,7 +28,7 @@ end
 DataMapper.finalize.auto_upgrade!
 
 get '/' do
-	if session[:user] == true
+	if session[:user] == true then
 		@admin = true
 	else 
 		@admin = false
@@ -37,7 +37,7 @@ get '/' do
 end
 
 get '/new' do
-	if session[:user] == true
+	if session[:user] == true then
 		erb :new_post
 	else
 		redirect '/auth'
@@ -47,14 +47,14 @@ end
 post '/new' do
 	p = Post.new  
 	p.title = params[:title]
-  p.content = params[:content]
-  p.created_at = Time.now  
-  p.save  
-  redirect '/posts'
+	p.content = params[:content]
+	p.created_at = Time.now  
+	p.save  
+	redirect '/posts'
 end
 
 get '/delete' do
-	if session[:user] == true
+	if session[:user] == true then
 		@posts = Post.all :order => :id.desc
 		erb :delete_post
 	else
@@ -83,7 +83,7 @@ get '/auth' do
 end
 
 post '/auth' do
-	if checkLogin(params[:name], params[:password])
+	if checkLogin(params[:name], params[:password]) then
 		session[:user] = true
 		redirect '/new'
 	else 
