@@ -2,7 +2,7 @@ require 'sinatra'
 require 'data_mapper'
 
 def checkLogin (name, pass)
-	if name == 'Jared' and pass == 'jaywrit' then
+	if name == 'Jared' and pass == '*******' then
 		return true
 	else 
 		return false
